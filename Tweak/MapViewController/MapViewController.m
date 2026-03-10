@@ -100,8 +100,17 @@ NSString *const LocusMapSheetDidDismissNotification = @"LocusMapSheetDidDismissN
 	UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithPointSize:16 weight:UIImageSymbolWeightSemibold];
 	UIImage *xImage = [UIImage systemImageNamed:@"xmark" withConfiguration:config];
 	UIImage *templateImage = [xImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-	if (@available(iOS 15.0, *)) {
-		UIButtonConfiguration *buttonConfig = [UIButtonConfiguration plainButtonConfiguration];
+	if (@available(iOS 26.0, *)) {
+		UIButtonConfiguration *buttonConfig = nil;
+		SEL glassSelector = NSSelectorFromString(@"glassButtonConfiguration");
+		if ([UIButtonConfiguration respondsToSelector:glassSelector]) {
+			IMP imp = [UIButtonConfiguration methodForSelector:glassSelector];
+			UIButtonConfiguration *(*func)(id, SEL) = (void *)imp;
+			buttonConfig = func([UIButtonConfiguration class], glassSelector);
+		}
+		if (!buttonConfig) {
+			buttonConfig = [UIButtonConfiguration plainButtonConfiguration];
+		}
 		buttonConfig.image = templateImage;
 		buttonConfig.contentInsets = NSDirectionalEdgeInsetsMake(8, 8, 8, 8);
 		buttonConfig.baseForegroundColor = [UIColor labelColor];
@@ -113,6 +122,12 @@ NSString *const LocusMapSheetDidDismissNotification = @"LocusMapSheetDidDismissN
 		bg.strokeWidth = 0.5;
 		buttonConfig.background = bg;
 
+		self.closeButton.configuration = buttonConfig;
+	} else if (@available(iOS 15.0, *)) {
+		UIButtonConfiguration *buttonConfig = [UIButtonConfiguration plainButtonConfiguration];
+		buttonConfig.image = templateImage;
+		buttonConfig.contentInsets = NSDirectionalEdgeInsetsMake(8, 8, 8, 8);
+		buttonConfig.baseForegroundColor = [UIColor labelColor];
 		self.closeButton.configuration = buttonConfig;
 	} else {
 		self.closeButton.backgroundColor = [UIColor secondarySystemBackgroundColor];
@@ -191,8 +206,17 @@ NSString *const LocusMapSheetDidDismissNotification = @"LocusMapSheetDidDismissN
 	UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithPointSize:symbolSize weight:UIImageSymbolWeightMedium];
 	UIImage *image = [UIImage systemImageNamed:imageName withConfiguration:config];
 	UIImage *templateImage = [image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-	if (@available(iOS 15.0, *)) {
-		UIButtonConfiguration *buttonConfig = [UIButtonConfiguration plainButtonConfiguration];
+	if (@available(iOS 26.0, *)) {
+		UIButtonConfiguration *buttonConfig = nil;
+		SEL glassSelector = NSSelectorFromString(@"glassButtonConfiguration");
+		if ([UIButtonConfiguration respondsToSelector:glassSelector]) {
+			IMP imp = [UIButtonConfiguration methodForSelector:glassSelector];
+			UIButtonConfiguration *(*func)(id, SEL) = (void *)imp;
+			buttonConfig = func([UIButtonConfiguration class], glassSelector);
+		}
+		if (!buttonConfig) {
+			buttonConfig = [UIButtonConfiguration plainButtonConfiguration];
+		}
 		buttonConfig.image = templateImage;
 		buttonConfig.contentInsets = NSDirectionalEdgeInsetsMake(10, 10, 10, 10);
 		buttonConfig.baseForegroundColor = [UIColor labelColor];
@@ -204,6 +228,12 @@ NSString *const LocusMapSheetDidDismissNotification = @"LocusMapSheetDidDismissN
 		bg.strokeWidth = 0.5;
 		buttonConfig.background = bg;
 
+		button.configuration = buttonConfig;
+	} else if (@available(iOS 15.0, *)) {
+		UIButtonConfiguration *buttonConfig = [UIButtonConfiguration plainButtonConfiguration];
+		buttonConfig.image = templateImage;
+		buttonConfig.contentInsets = NSDirectionalEdgeInsetsMake(10, 10, 10, 10);
+		buttonConfig.baseForegroundColor = [UIColor labelColor];
 		button.configuration = buttonConfig;
 	} else {
 		button.backgroundColor = [UIColor secondarySystemBackgroundColor];
