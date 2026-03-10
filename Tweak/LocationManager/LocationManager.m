@@ -1,8 +1,8 @@
-#import "LocationManager.h"
-
 #import <float.h>
 #import <math.h>
 #import <objc/runtime.h>
+
+#import "LocationManager.h"
 
 NSString *const LocusSpoofingDidChangeNotification = @"LocusSpoofingDidChangeNotification";
 
@@ -18,13 +18,13 @@ static const void *kLocusDidUpdateLocationsOriginalIMPKey = &kLocusDidUpdateLoca
 static const void *kLocusDidUpdateToLocationOriginalIMPKey = &kLocusDidUpdateToLocationOriginalIMPKey;
 
 #ifndef LOCUS_DEBUG_LOGGING
-#define LOCUS_DEBUG_LOGGING 1
+	#define LOCUS_DEBUG_LOGGING 1
 #endif
 
 #if LOCUS_DEBUG_LOGGING
-#define LocusLog(fmt, ...) NSLog((@"[Locus] " fmt), ##__VA_ARGS__)
+	#define LocusLog(fmt, ...) NSLog((@"[Locus] " fmt), ##__VA_ARGS__)
 #else
-#define LocusLog(...)
+	#define LocusLog(...)
 #endif
 
 typedef void (*LocusDidUpdateLocationsIMP)(id, SEL, CLLocationManager *, NSArray<CLLocation *> *);
@@ -206,9 +206,9 @@ static void LocusSwizzledDidUpdateToLocation(id self, SEL _cmd, CLLocationManage
 		IMP originalImp = method_getImplementation(didUpdateLocationsMethod);
 		if (originalImp != (IMP)LocusSwizzledDidUpdateLocations) {
 			objc_setAssociatedObject(delegateClass,
-									kLocusDidUpdateLocationsOriginalIMPKey,
-									[NSValue valueWithPointer:originalImp],
-									OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+				kLocusDidUpdateLocationsOriginalIMPKey,
+				[NSValue valueWithPointer:originalImp],
+				OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 			method_setImplementation(didUpdateLocationsMethod, (IMP)LocusSwizzledDidUpdateLocations);
 		}
 	}
@@ -219,9 +219,9 @@ static void LocusSwizzledDidUpdateToLocation(id self, SEL _cmd, CLLocationManage
 		IMP originalImp = method_getImplementation(legacyMethod);
 		if (originalImp != (IMP)LocusSwizzledDidUpdateToLocation) {
 			objc_setAssociatedObject(delegateClass,
-									kLocusDidUpdateToLocationOriginalIMPKey,
-									[NSValue valueWithPointer:originalImp],
-									OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+				kLocusDidUpdateToLocationOriginalIMPKey,
+				[NSValue valueWithPointer:originalImp],
+				OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 			method_setImplementation(legacyMethod, (IMP)LocusSwizzledDidUpdateToLocation);
 		}
 	}
