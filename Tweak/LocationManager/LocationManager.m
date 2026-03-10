@@ -6,6 +6,8 @@
 
 NSString *const LocusSpoofingDidChangeNotification = @"LocusSpoofingDidChangeNotification";
 
+static BOOL gLocusInitializingSharedInstance = NO;
+
 static NSString *const LocusPersistSpoofingEnabledKey = @"LocusPersistSpoofingEnabledKey";
 static NSString *const LocusPersistLatitudeKey = @"LocusPersistLatitudeKey";
 static NSString *const LocusPersistLongitudeKey = @"LocusPersistLongitudeKey";
@@ -81,9 +83,15 @@ static void LocusSwizzledDidUpdateToLocation(id self, SEL _cmd, CLLocationManage
 	static LocusLocationManager *instance;
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
+		gLocusInitializingSharedInstance = YES;
 		instance = [[LocusLocationManager alloc] init];
+		gLocusInitializingSharedInstance = NO;
 	});
 	return instance;
+}
+
++ (BOOL)isInitializingSharedInstance {
+	return gLocusInitializingSharedInstance;
 }
 
 - (instancetype)init {
@@ -339,7 +347,7 @@ static void LocusSwizzledDidUpdateToLocation(id self, SEL _cmd, CLLocationManage
 		return;
 	}
 
-	__weak typeof(self) weakSelf = self;
+	__unsafe_unretained typeof(self) weakSelf = self;
 	self.backgroundTaskID = [application beginBackgroundTaskWithName:@"LocusSpoofPush" expirationHandler:^{
 		[weakSelf endShortBackgroundTask];
 	}];

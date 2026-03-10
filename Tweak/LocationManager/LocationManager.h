@@ -19,6 +19,7 @@ extern NSString *const LocusSpoofingDidChangeNotification;
 @property (nonatomic, strong) NSHashTable<CLLocationManager *> *trackedManagers;
 
 + (instancetype)shared;
++ (BOOL)isInitializingSharedInstance;
 
 - (void)startSpoofingWithCoordinate:(CLLocationCoordinate2D)coordinate;
 - (void)stopSpoofing;

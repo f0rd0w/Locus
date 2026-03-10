@@ -65,6 +65,9 @@ static void setupFloatingButtonLifecycleObservers(void) {
 // so we can push fake locations to them later
 - (void)setDelegate:(id<CLLocationManagerDelegate>)delegate {
 	%orig;
+	if ([LocusLocationManager isInitializingSharedInstance]) {
+		return;
+	}
 	if (delegate) {
 		[[LocusLocationManager shared] trackManager:self];
 		[[LocusLocationManager shared] registerDelegateIfNeeded:delegate];
@@ -75,6 +78,9 @@ static void setupFloatingButtonLifecycleObservers(void) {
 // immediately push a fake location if spoofing is active
 - (void)startUpdatingLocation {
 	%orig;
+	if ([LocusLocationManager isInitializingSharedInstance]) {
+		return;
+	}
 	[[LocusLocationManager shared] trackManager:self];
 	if ([LocusLocationManager shared].isSpoofing) {
 		dispatch_async(dispatch_get_main_queue(), ^{
@@ -87,6 +93,9 @@ static void setupFloatingButtonLifecycleObservers(void) {
 // Push a fake location immediately after the real request
 - (void)requestLocation {
 	%orig;
+	if ([LocusLocationManager isInitializingSharedInstance]) {
+		return;
+	}
 	[[LocusLocationManager shared] trackManager:self];
 	if ([LocusLocationManager shared].isSpoofing) {
 		dispatch_async(dispatch_get_main_queue(), ^{
@@ -98,6 +107,9 @@ static void setupFloatingButtonLifecycleObservers(void) {
 // Hook significant location changes — some apps use this instead
 - (void)startMonitoringSignificantLocationChanges {
 	%orig;
+	if ([LocusLocationManager isInitializingSharedInstance]) {
+		return;
+	}
 	[[LocusLocationManager shared] trackManager:self];
 	if ([LocusLocationManager shared].isSpoofing) {
 		dispatch_async(dispatch_get_main_queue(), ^{
