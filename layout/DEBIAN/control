@@ -1,0 +1,9 @@
+Package: moe.waru.locus
+Name: Locus
+Version: 1.0.0
+Architecture: iphoneos-arm
+Description: Per-app location spoofing tweak with floating map UI.
+Maintainer: waruhachi
+Author: waruhachi
+Section: Tweaks
+Depends: mobilesubstrate
