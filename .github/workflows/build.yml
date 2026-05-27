@@ -34,11 +34,10 @@ jobs:
 
       - name: Collect artifacts
         run: |
-          mkdir -p artifacts
-          cp rootless/packages/*.deb   artifacts/ 2>/dev/null || true
-          cp rootful/packages/*.deb    artifacts/ 2>/dev/null || true
-          cp roothide/packages/*.deb   artifacts/ 2>/dev/null || true
+          mkdir -p packages
+          cp rootless/packages/*.deb   packages/ 2>/dev/null || true
+          cp rootful/packages/*.deb    packages/ 2>/dev/null || true
+          cp roothide/packages/*.deb   packages/ 2>/dev/null || true
 
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+      
         
